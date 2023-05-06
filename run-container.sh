@@ -1,4 +1,5 @@
 docker run -itd \
+    -e DRIPCARBOT_TOKEN=$1 \
     --restart=always \
     --name dripcarbot \
     --mount type=bind,source=./user_data.json,target=/dripcarbot/user_data.json \
