@@ -77,8 +77,8 @@ def create_embed(title, description):
 
 # number to ordinal function
 def to_ordinal(number):
-    last_digit = number % 10 in [1, 2, 3]
-    suffix = ["st", "nd", "rd"][last_digit] if last_digit in [1, 2, 3] else "th"
+    last_digit = number % 10
+    suffix = ["st", "nd", "rd"][last_digit - 1] if last_digit in [1, 2, 3] else "th"
     return f"{number}{suffix}"
 
 # duplicate finder
@@ -119,12 +119,11 @@ if len(duplicates) > 0:
 # open databases
 name_db = JsonDB("name_data.json")
 user_db = JsonDB("user_data.json")
-frequency_db = JsonDB("frequency_db.json")
+frequency_db = JsonDB("frequency_data.json")
 
 # create instance of discord.Client
-intents = discord.Intents.default()
+intents = discord.Intents().default()
 intents.message_content = True
-
 dripcarbot = discord.Client(intents = intents)
 
 async def post_leaderboards(message: discord.Message):
@@ -132,145 +131,63 @@ async def post_leaderboards(message: discord.Message):
     for car in frequency_db.data.keys():
         total_posted += frequency_db.data[car]
 
-#    filename = "frequency_data.json"
-#    
-#    create_json(filename)
-#
-#    with open(filename, "r") as file:
-#        data = json.loads(file.read())
-#        length = 0
-#        files = len(glob.glob(VIDEO_DIRECTORY) + glob.glob(IMAGE_DIRECTORY))
-#
-#        for d in data:
-#            length += data[d]
-#    
-#    filename = "user_data.json"
-#    
-#    create_json(filename)
-#
-#    with open(filename, "r") as file:
-#        data = json.loads(file.read())
-#        list = []
-#        
-#        for d in data:
-#            with open("name_data.json", "r") as other_file:
-#                other_data = json.loads(other_file.read())
-#                list.append((other_data[d], len(data[d])))
-#
-#    list.sort(key=lambda tup: tup[1])
-#    
-#    if len(list) > 5:
-#        list = list[-5:]
-#
-#    list.reverse()
-#
+    people = []
+    for name in user_db.data.keys():
+        people.append((name_db.data[name], len(user_db.data[name])))
+
+    people.sort(key = lambda element: element[1])
+    
+    if len(people) > 5:
+        people = people[-5:]
+
+    people.reverse()
+
     description = ""
-#    index = 0
-#
-#    for l in list:
-#        index += 1
-#        max_format = "**" if l[1] == files else ""
-#        separator = "🚗🚙" if index % 2 == 0 else "🚙🚗"
-#        description += f"{index}. {separator[0]} **{l[0]}** with {max_format}{l[1]}/{files}{max_format} cars {separator[1]}\n\n"
-#
+
+    for index in range(len(people)):
+        person = people[index]
+        max_format = "**" if person[1] == len(cars) else ""
+        separator = "🚗🚙" if index % 2 == 0 else "🚙🚗"
+        description += f"{index + 1}. {separator[0]} **{person[0]}** with {max_format}{person[1]}/{len(cars)}{max_format} cars {separator[1]}\n"
+
     await message.reply(embed = create_embed(f"car of fame (posted {total_posted} cars in total)", description))
 
 async def reply_to_query(message: discord.Message, query: str):
-#    length = len(query)
-#
-#    filename = "name_data.json"
-#    
-#    create_json(filename)
-#
-#    with open(filename, "r") as file:
-#        data = json.loads(file.read())
-#        data[author.id] = author.name
-#
-#    os.remove(filename)
-#
-#    with open(filename, "w") as file:
-#        json.dump(data, file, indent=4)
-#
-#    while len(query):
-#        videos = glob.glob(VIDEO_DIRECTORY) + glob.glob(IMAGE_DIRECTORY) 
-#        videos_length = len(videos)
-#        matches = []
-#
-#        try:
-#            regex = re.compile(query.lower())
-#            matches = [ s for s in videos if regex.search(s.replace("E:/!!!/absolute elite memes/cars\\", "").replace(".mp4", "").replace(".png", "")) != None ]
-#        except:
-#            query = query[:-1]
-#            continue
-#
-#        if len(matches) != 0:
-#            video = random.choice(matches)
-#            preview = video.replace("E:/!!!/absolute elite memes/cars\\", "").replace(".mp4", "").replace(".png", "")
-#            title = ""
-#
-#            filename = "frequency_data.json"
-#            
-#            create_json(filename)
-#
-#            with open(filename, "r") as file:
-#                data = json.loads(file.read())
-#                id = str(preview)
-#                times_format = "time"
-#
-#                if id not in data:
-#                    data[id] = 0
-#                    times_format = "EVER SEEN"
-#
-#                data[id] += 1
-#                times_seen = data[id]
-#
-#            os.remove(filename)
-#
-#            with open(filename, "w") as file:
-#                json.dump(data, file, indent=4)
-#
-#            filename = "user_data.json"
-#
-#            with open(filename, "r") as file:
-#                data = json.loads(file.read())
-#                description = f"already seen"
-#                id = str(author.id)
-#
-#                if id not in data:
-#                    data[id] = []
-#
-#                if preview not in data[id]:
-#                    data[id].append(preview)
-#                    description = f"**+1**"
-#                    title = "NEW "
-#                    
-#                description += f" ({len(data[id])}/{videos_length})" if len(data[id]) < videos_length else " (**all cars obtained**)"
-#            
-#            os.remove(filename)
-#
-#            with open(filename, "w") as file:
-#                json.dump(data, file, indent=4)
-#                
-#            return (
-#                create_embed(
-#                    f"{title}[{preview}] (found {len(matches)}, {to_ordinal(times_seen)} {times_format})",
-#                    f"🚗 {math.floor(len(query) / length * 100)}% accuracy, {description} 🚙"
-#                ),
-#                discord.File(video)
-#            )
-#
-#        query = query[:-1]
+    # update display name of author
+    name_db.data[str(message.author.id)] = message.author.display_name
+    name_db.save(force = False)
 
     result = find_car(query, 1)
 
-    # reply accordingly if car found
+    # reply accordingly and save data if car was found
     if result:
         name = result["name"]
         url = result["url"]
         accuracy = result["accuracy"]
 
+        times_format = "time"
+        if name not in frequency_db.data.keys():
+            times_format = "EVER SEEN"
+            frequency_db.data[name] = 1
+            times_seen = 1
+        else:
+            frequency_db.data[name] += 1
+            times_seen = frequency_db.data[name]
+
+        description = "already seen"
+        title = ""
+        if name not in user_db.data[str(message.author.id)]:
+            description = "**+1**"
+            title = "NEW "
+            user_db.data[str(message.author.id)].append(name)
+
         await message.reply(url)
-        await message.channel.send(embed = create_embed(f"found {name}!", f"🚗 {accuracy}% accuracy 🚙"))
+        await message.channel.send(embed = create_embed(f"{title}[{name}] ({to_ordinal(times_seen)} {times_format})", f"🚗 {accuracy}% accuracy, {description} 🚙"))
+
+        # save data
+        frequency_db.save()
+        user_db.save()
+
         return
     
     # ...or reply with error message
@@ -312,7 +229,7 @@ async def on_message(message: discord.Message):
 
 @dripcarbot.event
 async def on_ready():
-    # TODO: random presences
+    print(f"Add bot via this link: https://discord.com/api/oauth2/authorize?client_id={dripcarbot.user.id}&permissions=52224&scope=bot")
     await dripcarbot.change_presence(activity = discord.Game("videos of drip cars"))
 
 dripcarbot.run(os.getenv("DRIPCARBOT_TOKEN"))
