@@ -1,3 +1,11 @@
+if [[ -z "$1" ]]; then
+    echo "you haven't provided bot token!"
+    exit
+fi
+
+docker stop dripcarbot
+docker rm dripcarbot
+
 docker run -itd \
     -e DRIPCARBOT_TOKEN=$1 \
     --restart=always \

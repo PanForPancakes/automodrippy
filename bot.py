@@ -4,11 +4,7 @@ import os, re, discord, json, os, os.path, threading
 # fuzzywuzzy search
 from fuzzywuzzy import process as fuzz
 
-
-
 DEFAULT = "not_found.mp3"
-
-
 
 # basic json-"db" "manager" for storing data
 class JsonDB:
