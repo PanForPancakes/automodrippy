@@ -1,5 +1,5 @@
 # miscellaneous
-import os, re, discord, glob, json, os, os.path, math, random, time, threading
+import os, re, discord, json, os, os.path, threading
 
 # fuzzywuzzy search
 from fuzzywuzzy import process as fuzz
