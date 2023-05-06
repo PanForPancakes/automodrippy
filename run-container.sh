@@ -1,4 +1,4 @@
-sudo docker run -itd \
+docker run -itd \
     --restart=always \
     --name dripcarbot \
     --mount type=bind,source=./user_data.json,target=/dripcarbot/user_data.json \
