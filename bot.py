@@ -206,7 +206,7 @@ async def on_message(message: discord.Message):
     # --- nc group: bot prefixes
     # --- nc group: ignore spaces after bot prefix
     # 1st ct group: user query
-    regex = r"(?: *)(?:🚗|🚙|:dripcar:)(?: *)(.*)"
+    regex = r"(?: *)(?:🚗|🚙|:DripCar:)(?: *)(.*)"
 
     # parse user message
     match = re.search(regex, message.content)
