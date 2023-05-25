@@ -49,4 +49,4 @@ $builder run -itd \
     --restart=always \
     --name automodrippy \
     --mount type=bind,source=./data,target=/automodrippy \
-    automodrippy:latest
+    localhost/automodrippy:latest
