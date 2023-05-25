@@ -113,9 +113,9 @@ if len(duplicates) > 0:
     exit(1)
 
 # open databases
-name_db = JsonDB("name_data.json")
-user_db = JsonDB("user_data.json")
-frequency_db = JsonDB("frequency_data.json")
+name_db = JsonDB(".automodrippy/name_data.json")
+user_db = JsonDB(".automodrippy/user_data.json")
+frequency_db = JsonDB(".automodrippy/frequency_data.json")
 
 # create instance of discord.Client
 intents = discord.Intents().default()

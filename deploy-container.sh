@@ -48,5 +48,5 @@ $builder run -itd \
     -e AUTOMODRIPPY_TOKEN="$automodrippy_token" \
     --restart=always \
     --name automodrippy \
-    --mount type=bind,source=./data,target=/automodrippy \
+    --mount type=bind,source=./data,target=/automodrippy/.automodrippy \
     localhost/automodrippy:latest
