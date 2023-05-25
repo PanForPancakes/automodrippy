@@ -187,7 +187,7 @@ async def reply_to_query(message: discord.Message, query: str):
             user_db.data[str(message.author.id)].append(name)
 
         # why not? scraped from isevenapi.xyz
-        random_messages = {
+        random_messages = [
             "Andy's hand-made Fingerboxes are built with high quality aluminum. Get yours today!",
             'FOR SALE - collection of old people call 253-555-7212',
             '1995 NISSAN Maxima, green, leather, loaded, CD, auto start, sunroof, 4-door, great condtion, NOT FOR SALE',
@@ -210,7 +210,7 @@ async def reply_to_query(message: discord.Message, query: str):
             'FOR SALE: outdoor nativity scene. No Jesus, Mary, or Joseph. $50 OBO call 344-555-6425',
             'Scarecrow wanted for field in Saskatchewan. Must not be afraid of birds. Email buddybilly@qotmail.com',
             'Buy AutomoDripCoin, the hottest new cryptocurrency!'
-        }
+        ]
 
         await message.reply(f"## [{random_messages[random.randint(0, len(random_messages) - 1)]}]({url})")
         await message.channel.send(embed = create_embed(f"{title}[{name}] ({to_ordinal(times_seen)} {times_format})", f"🚗 {accuracy}% accuracy, {description} 🚙"))
