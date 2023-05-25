@@ -43,9 +43,13 @@ $builder build --tag automodrippy .
 $builder stop --ignore automodrippy
 $builder rm --ignore automodrippy
 
+# make sure data dir exists
+
+mkdir -p data
+
 # start new container
 
-docker run -itd \
+$builder run -itd \
     -e AUTOMODRIPPY_TOKEN=$automodrippy_token \
     --restart=always \
     --name automodrippy \
