@@ -8,4 +8,4 @@ COPY not_found.mp3 ./
 COPY automodrippy.py ./
 
 COPY cars.txt ./
-CMD [ "python", "./automodrippy.py" ]
+CMD [ "python", "automodrippy.py" ]

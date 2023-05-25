@@ -45,7 +45,7 @@ mkdir -p data
 # start new container
 
 $builder run -itd \
-    -e AUTOMODRIPPY_TOKEN=$automodrippy_token \
+    -e AUTOMODRIPPY_TOKEN="$automodrippy_token" \
     --restart=always \
     --name automodrippy \
     --mount type=bind,source=./data,target=/automodrippy \
