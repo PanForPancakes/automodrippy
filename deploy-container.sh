@@ -19,17 +19,11 @@ fi
 
 # find out what builder we are using [docker > podman]
 
-docker --version > /dev/null
-if [ $? -eq 0 ]; then
+if [ -x "$(command -v docker --version)" ]; then
     builder=docker
-fi
-
-podman --version > /dev/null
-if [ $? -eq 0 ]; then
+elif [ -x "$(command -v podman --version)" ]; then
     builder=podman
-fi
-
-if [[ -z "$builder" ]]; then
+else
     echo "Neither usable docker or podman are found."
     echo "Abort."
     exit 1
