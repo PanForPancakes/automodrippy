@@ -62,7 +62,7 @@ def find_car(query: str, gate = None):
     accuracy = search_result["accuracy"]
 
     return {
-        "name": cars[index],
+        "name": original_cars[index],
         "url": f"https://awesomecars.neocities.org/ver2/{index + 1}.mp4",
         "accuracy": accuracy
     }
@@ -97,6 +97,7 @@ with open("cars.txt") as lines:
     cars = [line.strip().lower() for line in lines]
 
 # deletes "car" suffix from every element because it seems like it really messes up fuzzy search algorithm
+original_cars = cars.copy()
 cars = [re.sub(r"(.+) +?car", "\\1", car, 1) for car in cars]
 
 duplicates = find_duplicates(cars)
