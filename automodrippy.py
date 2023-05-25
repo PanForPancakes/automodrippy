@@ -1,5 +1,5 @@
 # miscellaneous
-import os, re, discord, json, os, os.path, threading
+import os, re, discord, json, os, os.path, threading, logging
 
 # fuzzywuzzy search
 from fuzzywuzzy import process as fuzz
@@ -120,7 +120,7 @@ frequency_db = JsonDB("frequency_data.json")
 # create instance of discord.Client
 intents = discord.Intents().default()
 intents.message_content = True
-dripcarbot = discord.Client(intents = intents)
+automodrippy = discord.Client(intents = intents)
 
 async def post_leaderboards(message: discord.Message):
     total_posted = 0
@@ -192,10 +192,10 @@ async def reply_to_query(message: discord.Message, query: str):
     # ...or reply with error message
     await message.reply(embed = create_embed("no car found", "🚗 choot choot 🚙 (0% accuracy)"), file = discord.File(DEFAULT))
 
-@dripcarbot.event
+@automodrippy.event
 async def on_message(message: discord.Message):
     # ignore bot messages
-    if message.author == dripcarbot.user:
+    if message.author == automodrippy.user:
         return
     
     # ignore messages from non-text channels
@@ -226,9 +226,9 @@ async def on_message(message: discord.Message):
     # ...or else reply to query
     await reply_to_query(message, query)
 
-@dripcarbot.event
+@automodrippy.event
 async def on_ready():
-    print(f"Add bot via this link: https://discord.com/api/oauth2/authorize?client_id={dripcarbot.user.id}&permissions=52224&scope=bot")
-    await dripcarbot.change_presence(activity = discord.Game("videos of drip cars"))
+    logging.info(f"Add bot via this link: https://discord.com/api/oauth2/authorize?client_id={automodrippy.user.id}&permissions=52224&scope=bot")
+    await automodrippy.change_presence(activity = discord.Game("videos of drip cars"))
 
-dripcarbot.run(os.getenv("DRIPCARBOT_TOKEN"))
+automodrippy.run(os.getenv("AUTOMODRIPPY_TOKEN"))

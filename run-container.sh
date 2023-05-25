@@ -3,14 +3,14 @@ if [[ -z "$1" ]]; then
     exit
 fi
 
-docker stop dripcarbot
-docker rm dripcarbot
+docker stop automodrippy
+docker rm automodrippy
 
 docker run -itd \
-    -e DRIPCARBOT_TOKEN=$1 \
+    -e AUTOMODRIPPY_TOKEN=$1 \
     --restart=always \
-    --name dripcarbot \
-    --mount type=bind,source=./user_data.json,target=/dripcarbot/user_data.json \
-    --mount type=bind,source=./name_data.json,target=/dripcarbot/name_data.json \
-    --mount type=bind,source=./frequency_data.json,target=/dripcarbot/frequency_data.json \
-    dripcarbot:latest
+    --name automodrippy \
+    --mount type=bind,source=./user_data.json,target=/automodrippyv/user_data.json \
+    --mount type=bind,source=./name_data.json,target=/automodrippy/name_data.json \
+    --mount type=bind,source=./frequency_data.json,target=/automodrippy/frequency_data.json \
+    automodrippy:latest
