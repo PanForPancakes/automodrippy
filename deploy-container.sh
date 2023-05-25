@@ -6,7 +6,7 @@ if [ ! -f TOKEN ]; then
     exit 1
 fi
 
-automodrippy_token = "cat TOKEN"
+automodrippy_token="cat TOKEN"
 
 if [[ -z "$automodrippy_token" ]]; then
     echo "No bot token in TOKEN file"
@@ -20,12 +20,12 @@ if [[ -z "$automodrippy_token" ]]; then
 
 docker --version > /dev/null
 if [ $? -eq 0 ]; then
-    builder = docker
+    builder=docker
 fi
 
 podman --version > /dev/null
 if [ $? -eq 0 ]; then
-    builder = podman
+    builder=podman
 fi
 
 if [[ -z "$builder" ]]; then
