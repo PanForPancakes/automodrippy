@@ -1,5 +1,11 @@
 # get token
 
+if [ ! -f TOKEN ]; then
+    echo "TOKEN file doesn't exist."
+    echo "Abort."
+    exit 1
+fi
+
 automodrippy_token = "cat TOKEN"
 
 if [[ -z "$automodrippy_token" ]]; then
@@ -8,7 +14,7 @@ if [[ -z "$automodrippy_token" ]]; then
     echo "echo \"<your_token_here> >\" > TOKEN"
     echo "...and then rerun this script again."
     echo "Abort."
-    exit
+    exit 1
 
 # find out what builder we are using [docker > podman]
 
@@ -25,7 +31,7 @@ fi
 if [[ -z "$builder" ]]; then
     echo "Neither usable docker or podman are found."
     echo "Abort."
-    exit
+    exit 1
 fi
 
 # build new container
