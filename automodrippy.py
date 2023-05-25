@@ -1,8 +1,8 @@
 # miscellaneous
 import os, re, discord, json, os, os.path, threading, logging
 
-# fuzzywuzzy search
-from fuzzywuzzy import process as fuzz
+# thefuzz search
+from thefuzz import process as fuzz
 
 DEFAULT = "not_found.mp3"
 
