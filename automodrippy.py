@@ -38,7 +38,7 @@ class JsonDB:
 
 # very clever index search
 def vcis(what: object, where: list, gate: int = 75):
-    found, accuracy = fuzz.extract(what, where, limit = 1)[0]
+    found, accuracy = fuzz.extract(what, where, limit = 1, scorer = fuzz.partial_ratio, processor = None)[0]
 
     if accuracy < gate:
         return None
