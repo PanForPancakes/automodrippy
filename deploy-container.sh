@@ -15,6 +15,7 @@ if [[ -z "$automodrippy_token" ]]; then
     echo "...and then rerun this script again."
     echo "Abort."
     exit 1
+fi
 
 # find out what builder we are using [docker > podman]
 
