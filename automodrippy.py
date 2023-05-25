@@ -38,7 +38,7 @@ class JsonDB:
 
 # very clever index search
 def vcis(what: object, where: list, gate: int = 75):
-    found, accuracy = fuzz.extract(what, where, limit = 50, scorer = fuzz.partial_ratio, processor = None)[0]
+    found, accuracy = fuzz.extract(what, where, limit = 50)[0]
 
     if accuracy < gate:
         return None
@@ -95,6 +95,9 @@ def find_duplicates(where: list):
 # load cars info
 with open("cars.txt") as lines:
     cars = [line.strip().lower() for line in lines]
+
+# deletes "car" suffix from every element because it seems like it really messes up fuzzy search algorithm
+cars = [re.sub(r"(.+) +?car", "\\1", car, 1) for car in cars]
 
 duplicates = find_duplicates(cars)
 if len(duplicates) > 0:
@@ -153,6 +156,8 @@ async def reply_to_query(message: discord.Message, query: str):
     name_db.data[str(message.author.id)] = message.author.display_name
     name_db.save(force = False)
 
+    # deletes car suffix, copypaste of some code above
+    query = re.sub(r"(.+) +?car", "\\1", query, 1)
     result = find_car(query, 1)
 
     # reply accordingly and save data if car was found
