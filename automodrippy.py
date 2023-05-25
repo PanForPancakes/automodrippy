@@ -212,7 +212,7 @@ async def reply_to_query(message: discord.Message, query: str):
             'Buy AutomoDripCoin, the hottest new cryptocurrency!'
         ]
 
-        await message.reply(f"## [{random_messages[random.randint(0, len(random_messages) - 1)]}]({url})")
+        await message.reply(f"[{random_messages[random.randint(0, len(random_messages) - 1)]}]({url})")
         await message.channel.send(embed = create_embed(f"{title}[{name}] ({to_ordinal(times_seen)} {times_format})", f"🚗 {accuracy}% accuracy, {description} 🚙"))
 
         # save data
