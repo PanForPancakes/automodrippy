@@ -212,7 +212,36 @@ async def reply_to_query(message: discord.Message, query: str):
             'Buy AutomoDripCoin, the hottest new cryptocurrency!'
         ]
 
-        await message.reply(f"[{random_messages[random.randint(0, len(random_messages) - 1)]}]({url})")
+        random_tlds = [
+            ".com",
+            ".xxx",
+            ".xyz",
+            ".love",
+            ".io",
+            ".roblox",
+            ".volvo",
+            ".kia",
+            ".mercedes",
+            ".bmw",
+            ".cars",
+            ".dripcar"
+        ]
+
+        random_links = [
+            "download-more-cars",
+            "i-love-my-car",
+            "hot-cars-watch-for-free",
+            "dripcar-my-beloved",
+            "i-have-car-videos",
+            "car-share"
+        ]
+
+        # please DO NOT OPEN ANY OF THESE LINKS I HAVE THESE ARE RANDOMLY GENERATED AND MAY AND MAY NOT EXIST
+        # CONTENT ON THESE PAGES IS NOT CONTROLLED SO FOR YOUR SAFETY DO NOT VISIT THESE URLS, PERIOD.
+
+        lol = random_links[random.randint(0, len(random_links) - 1)] + random_tlds[random.randint(0, len(random_tlds) - 1)]
+
+        await message.reply(f"## Sponsored: [{random_messages[random.randint(0, len(random_messages) - 1)]}]\n{lol}: {url}")
         await message.channel.send(embed = create_embed(f"{title}[{name}] ({to_ordinal(times_seen)} {times_format})", f"🚗 {accuracy}% accuracy, {description} 🚙"))
 
         # save data
