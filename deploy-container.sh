@@ -6,7 +6,7 @@ if [ ! -f TOKEN ]; then
     exit 1
 fi
 
-automodrippy_token="cat TOKEN"
+automodrippy_token=`cat TOKEN`
 
 if [[ -z "$automodrippy_token" ]]; then
     echo "No bot token in TOKEN file"
