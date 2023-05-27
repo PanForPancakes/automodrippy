@@ -6,6 +6,9 @@ from thefuzz import process as fuzz
 
 DEFAULT = "not_found.mp3"
 
+# import best shitpost update ever
+from cool_things import ads
+
 # basic json-"db" "manager" for storing data
 class JsonDB:
     data: dict = None
@@ -186,32 +189,6 @@ async def reply_to_query(message: discord.Message, query: str):
             title = "NEW "
             user_db.data[str(message.author.id)].append(name)
 
-        # why not? scraped from isevenapi.xyz
-        random_messages = [
-            "Andy's hand-made Fingerboxes are built with high quality aluminum. Get yours today!",
-            'FOR SALE - collection of old people call 253-555-7212',
-            '1995 NISSAN Maxima, green, leather, loaded, CD, auto start, sunroof, 4-door, great condtion, NOT FOR SALE',
-            'For sale: human skull. Used once only. $200 OBO Dr. Scott Tyler, 454-555-6533',
-            "Auto Repair Service: Free pick-up and delivery. Try us once, you'll never go anywhere again. Email dave57@qotmail.com",
-            'SURGEON WANTED for a new heath clinic opening in SF. No experience needed. Must have own tools. Call 407-555-5400',
-            'Looking for someone to do yard work. Must have a hoolahoop. 760-555-7562',
-            'CHINA CABINET, buffet, hutch solid pine, 6.5 tall x 4.5 wide, lighted windows. few cat scratches but cat has died. $700. Call 435-555-6421',
-            'Lost- Donkey, wearing a pink halter, Monterey Center- 269-555-6234',
-            'TIRED OF WORKING FOR ONLY $9.75 PER HOUR? We offer profit sharing and flexible hours. Starting pay: $5-$7 per hour. Call 413-555-3451',
-            'FULL SIZE Mattress. Royal Tonic, 20 year warranty. Like new. Slight urine smell. $40, call 818-555-2301',
-            'FOR SALE: Complete set of Encyclopedia Britannica, 45 volumes. $1000. No longer needed. Got married, wife knows everything. Call 5435553442.',
-            'WANTED: Air Traffic Control. No Exp. Needed; we train, HS grads 17-34. Great pay, benefits. Must relocate. Call 284-555-7133',
-            'For Sale: Slightly used headstone. Perfect gift for someone named William Peterson. Email betsy.peterson@qotmail.com',
-            'PONY FOR SALE. Looks like a small horse. $900. 480-555-6341',
-            "HONDA CIVIC '96, AM/FM/CD, low miles, Good condition. Speaks Spanish $3500 339-555-6289",
-            "WILL the person who got hit in the head with a tomato in the 1950's please contact 414-555-4536",
-            'HELP WANTED: Child Care provider. Apply in person, Jack & Kill Childcare, 1905 NW Smith. NO PHONE CALLS',
-            'Drink Sprunk cola! The essence of life.',
-            'FOR SALE: outdoor nativity scene. No Jesus, Mary, or Joseph. $50 OBO call 344-555-6425',
-            'Scarecrow wanted for field in Saskatchewan. Must not be afraid of birds. Email buddybilly@qotmail.com',
-            'Buy AutomoDripCoin, the hottest new cryptocurrency!'
-        ]
-
         random_tlds = [
             ".com",
             ".xxx",
@@ -241,7 +218,7 @@ async def reply_to_query(message: discord.Message, query: str):
 
         lol = random_links[random.randint(0, len(random_links) - 1)] + random_tlds[random.randint(0, len(random_tlds) - 1)]
 
-        await message.reply(f"## Sponsored: [{random_messages[random.randint(0, len(random_messages) - 1)]}]\n{lol}: {url}")
+        await message.reply(f"## Sponsored: [{ads[random.randint(0, len(ads) - 1)]}]\n{lol}: {url}")
         await message.channel.send(embed = create_embed(f"{title}[{name}] ({to_ordinal(times_seen)} {times_format})", f"🚗 {accuracy}% accuracy, {description} 🚙"))
 
         # save data
