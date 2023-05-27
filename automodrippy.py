@@ -184,7 +184,7 @@ async def reply_to_query(message: discord.Message, query: str):
 
         description = "already seen"
         title = ""
-        if message.author.id not in user_db.data.keys():
+        if str(message.author.id) not in user_db.data.keys():
             user_db.data[str(message.author.id)] = []
 
         if name not in user_db.data[str(message.author.id)]:
