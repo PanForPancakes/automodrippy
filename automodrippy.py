@@ -136,7 +136,10 @@ async def post_leaderboards(message: discord.Message):
 
     people = []
     for name in user_db.data.keys():
-        people.append((name_db.data[name], len(user_db.data[name])))
+        if name not in name_db.data.keys():
+            people.append((f"<@{name}>", len(user_db.data[name])))
+        else:
+            people.append((name_db.data[name], len(user_db.data[name])))
 
     people.sort(key = lambda element: element[1])
     
