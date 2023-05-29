@@ -7,8 +7,6 @@ from thefuzz import process as fuzz
 # sillydbmanager improvised databases
 from sillydbmanager import JsonDictionaryDB, CsvListDB
 
-
-
 # car finder helper function
 def find_car(query: str, gate: int = 75):
     hashplussearchname = dict()
@@ -40,17 +38,15 @@ def to_ordinal(number):
     suffix = ["st", "nd", "rd"][last_digit - 1] if last_digit in [1, 2, 3] else "th"
     return f"{number}{suffix}"
 
-
-
 # load cars info
-raw_cars_db = CsvListDB("cars.csv")
+def load_cars():
+    raw_cars_db = CsvListDB("cars.csv")
+    for car_entry in raw_cars_db.data_list:
+        # cars[file_hash] = [file_link, visible_name, search_name]
+        cars[car_entry[0]] = [car_entry[1], car_entry[2], car_entry[3]]
 
 cars = {}
-for car_entry in raw_cars_db.data_list:
-    # cars[file_hash] = [file_link, visible_name, search_name]
-    cars[car_entry[0]] = [car_entry[1], car_entry[2], car_entry[3]]
-
-del raw_cars_db
+load_cars()
 
 # open databases
 name_db = JsonDictionaryDB(".automodrippy/name_data.json")
