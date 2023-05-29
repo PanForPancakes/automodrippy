@@ -49,6 +49,9 @@ cars = {}
 load_cars()
 
 # open databases
+users_db = JsonDictionaryDB(".automodrippy/users.json")
+freqs_db = JsonDictionaryDB(".automodrippy/freqs.json")
+
 name_db = JsonDictionaryDB(".automodrippy/name_data.json")
 user_db = JsonDictionaryDB(".automodrippy/user_data.json")
 frequency_db = JsonDictionaryDB(".automodrippy/frequency_data.json")
