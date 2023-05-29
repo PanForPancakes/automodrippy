@@ -6,9 +6,6 @@ from thefuzz import process as fuzz
 
 DEFAULT = "not_found.mp3"
 
-# import best shitpost update ever
-from cool_things import ads
-
 # basic json-"db" "manager" for storing data
 class JsonDB:
     data: dict = None
@@ -221,7 +218,7 @@ async def reply_to_query(message: discord.Message, query: str):
 
         lol = random_links[random.randint(0, len(random_links) - 1)] + random_tlds[random.randint(0, len(random_tlds) - 1)]
 
-        await message.reply(f"## Sponsored: [{ads[random.randint(0, len(ads) - 1)]}]\n{lol}: {url}")
+        await message.reply(f"{lol}: {url}")
         await message.channel.send(embed = create_embed(f"{title}[{name}] ({to_ordinal(times_seen)} {times_format})", f"🚗 {accuracy}% accuracy, {description} 🚙"))
 
         # save data
