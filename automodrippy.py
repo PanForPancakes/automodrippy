@@ -1,40 +1,32 @@
 # miscellaneous
-import os, re, discord, json, os, os.path, threading, logging, random
+import os, re, discord, os, os.path, logging, random
 
 # thefuzz search
 from thefuzz import process as fuzz
 
 # sillydbmanager improvised databases
-from sillydbmanager import JsonDictionaryDB
+from sillydbmanager import JsonDictionaryDB, CsvListDB
 
-# very clever index search
-def vcis(what: object, where: list, gate: int = 75):
-    found, accuracy = fuzz.extract(what, where, limit = 50)[0]
 
-    if accuracy < gate:
-        return None
-    else:
-        return {
-            "index": where.index(found),
-            "accuracy": accuracy
-        }
 
 # car finder helper function
-def find_car(query: str, gate = None):
-    if gate:
-        search_result = vcis(query, cars, gate)
-    else:
-        search_result = vcis(query, cars)
+def find_car(query: str, gate: int = 75):
+    hashplussearchname = dict()
+    for car_hash in cars.keys():
+        hashplussearchname[car_hash] = cars[car_hash][2]
 
-    if not search_result:
+    results = fuzz.extractBests("kek", hashplussearchname, limit = 10, score_cutoff = gate)
+
+    if len(results) == 0:
         return None
-    
-    index = search_result["index"]
-    accuracy = search_result["accuracy"]
+
+    _, accuracy, hash = random.choice(results)
+
+    car = cars[hash]
 
     return {
-        "name": original_cars[index],
-        "url": f"https://awesomecars.neocities.org/ver2/{index + 1}.mp4",
+        "url": car[0],
+        "name": car[1],
         "accuracy": accuracy
     }
 
@@ -48,44 +40,17 @@ def to_ordinal(number):
     suffix = ["st", "nd", "rd"][last_digit - 1] if last_digit in [1, 2, 3] else "th"
     return f"{number}{suffix}"
 
-# duplicate finder
-def find_duplicates(where: list):
-    seen = set()
-    buffer = []
-
-    for element in where:
-        if element in seen:
-            buffer.append(element)
-        else:
-            seen.add(element)
-
-    return buffer
-
 
 
 # load cars info
-with open("cars.txt") as lines:
-    cars = [line.strip().lower() for line in lines]
+raw_cars_db = CsvListDB("cars.csv")
 
-# deletes "car" suffix from every element because it seems like it really messes up fuzzy search algorithm
-original_cars = cars.copy()
-cars = [re.sub(r"(.+) +?car", "\\1", car, 1) for car in cars]
+cars = {}
+for car_entry in raw_cars_db.data_list:
+    # cars[file_hash] = [file_link, visible_name, search_name]
+    cars[car_entry[0]] = [car_entry[1], car_entry[2], car_entry[3]]
 
-duplicates = find_duplicates(cars)
-if len(duplicates) > 0:
-    print("Duplicate cars are found!")
-
-    reverse_cars = cars[::-1]
-    cars_count = len(cars)
-
-    for element in duplicates:
-        where = cars_count - reverse_cars.index(element) - 1
-        print(f"\"{cars[where]}\" at line {where + 1}")
-
-    print("Note: currently only last duplicates are shown, if there is >2 cars with same name this screen wouldn't tell you all of them immediately.")
-    print("Exiting.")
-
-    exit(1)
+del raw_cars_db
 
 # open databases
 name_db = JsonDictionaryDB(".automodrippy/name_data.json")
@@ -95,6 +60,7 @@ frequency_db = JsonDictionaryDB(".automodrippy/frequency_data.json")
 # create instance of discord.Client
 intents = discord.Intents().default()
 intents.message_content = True
+
 automodrippy = discord.Client(intents = intents)
 
 async def post_leaderboards(message: discord.Message):
@@ -129,7 +95,7 @@ async def post_leaderboards(message: discord.Message):
 async def reply_to_query(message: discord.Message, query: str):
     # update display name of author
     name_db.data_dict[str(message.author.id)] = message.author.display_name
-    name_db.save(force = False)
+    name_db.save()
 
     # deletes car suffix, copypaste of some code above
     query = re.sub(r"(.+) +?car", "\\1", query, 1)
@@ -160,32 +126,11 @@ async def reply_to_query(message: discord.Message, query: str):
             title = "NEW "
             user_db.data_dict[str(message.author.id)].append(name)
 
-        random_tlds = [
-            ".com",
-            ".xxx",
-            ".xyz",
-            ".love",
-            ".io",
-            ".roblox",
-            ".volvo",
-            ".kia",
-            ".mercedes",
-            ".bmw",
-            ".cars",
-            ".dripcar"
-        ]
+        random_tlds = [".com", ".xxx", ".xyz", ".love", ".io", ".roblox", ".volvo", ".kia", ".mercedes", ".bmw", ".cars", ".dripcar"]
+        random_links = ["download-more-cars", "i-love-my-car", "hot-cars-watch-for-free", "dripcar-my-beloved", "i-have-car-videos", "car-share", "my-drip-car", "free-cars-watch-online"]
 
-        random_links = [
-            "download-more-cars",
-            "i-love-my-car",
-            "hot-cars-watch-for-free",
-            "dripcar-my-beloved",
-            "i-have-car-videos",
-            "car-share"
-        ]
-
-        # please DO NOT OPEN ANY OF THESE LINKS I HAVE THESE ARE RANDOMLY GENERATED AND MAY AND MAY NOT EXIST
-        # CONTENT ON THESE PAGES IS NOT CONTROLLED SO FOR YOUR SAFETY DO NOT VISIT THESE URLS, PERIOD.
+        # GENERATED URLS BOTH MIGHT AND MIGHT NOT EXIST
+        # CONTENT ON THESE PAGES IS NOT CONTROLLED SO FOR YOUR SAFETY DO NOT VISIT GENERATED URLS
 
         lol = random_links[random.randint(0, len(random_links) - 1)] + random_tlds[random.randint(0, len(random_tlds) - 1)]
 
@@ -215,7 +160,8 @@ async def on_message(message: discord.Message):
     # --- nc group: bot prefixes
     # --- nc group: ignore spaces after bot prefix
     # 1st ct group: user query
-    regex = r"(?: *)(?:🚗|🚙|:DripCar:)(?: *)(.*)"
+    prefixes = ["🚗", "🚙", ":DripCar:"]
+    regex = rf"(?: *)(?:{'|'.join(prefixes)})(?: *)(.*)"
 
     # parse user message
     match = re.search(regex, message.content)
