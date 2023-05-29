@@ -152,6 +152,7 @@ async def on_message(message: discord.Message):
     
     # update user nickname and id
     if message.author.id not in users_db.data_dict:
+        users_db.data_dict[message.author.id] = dict()
         users_db.data_dict[message.author.id]["seen"] = []
 
     users_db.data_dict[message.author.id]["name"] = message.author.display_name
