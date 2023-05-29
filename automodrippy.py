@@ -23,6 +23,7 @@ def find_car(query: str, gate: int = 75):
     car = cars[hash]
 
     return {
+        "hash": hash,
         "url": car[0],
         "name": car[1],
         "accuracy": accuracy
@@ -52,10 +53,6 @@ load_cars()
 users_db = JsonDictionaryDB(".automodrippy/users.json")
 freqs_db = JsonDictionaryDB(".automodrippy/freqs.json")
 
-name_db = JsonDictionaryDB(".automodrippy/name_data.json")
-user_db = JsonDictionaryDB(".automodrippy/user_data.json")
-frequency_db = JsonDictionaryDB(".automodrippy/frequency_data.json")
-
 # create instance of discord.Client
 intents = discord.Intents().default()
 intents.message_content = True
@@ -63,26 +60,15 @@ intents.message_content = True
 automodrippy = discord.Client(intents = intents)
 
 async def post_leaderboards(message: discord.Message):
-    total_posted = 0
-    for car in frequency_db.data_dict.keys():
-        total_posted += frequency_db.data_dict[car]
+    total_posted = sum([freqs_db.data_dict[hash] for hash in freqs_db.data_dict.keys()])
 
-    people = []
-    for name in user_db.data_dict.keys():
-        if name not in name_db.data_dict.keys():
-            people.append((f"<@{name}>", len(user_db.data_dict[name])))
-        else:
-            people.append((name_db.data_dict[name], len(user_db.data_dict[name])))
-
+    people = [(users_db.data_dict[user_id]["name"], len(users_db.data_dict[user_id]["seen"])) for user_id in users_db.data_dict.keys()]
     people.sort(key = lambda element: element[1])
     
-    if len(people) > 5:
-        people = people[-5:]
-
+    people = people[-5:]
     people.reverse()
 
     description = ""
-
     for index in range(len(people)):
         person = people[index]
         max_format = "**" if person[1] == len(cars) else ""
@@ -92,44 +78,37 @@ async def post_leaderboards(message: discord.Message):
     await message.reply(embed = create_embed(f"car of fame (posted {total_posted} cars in total)", description))
 
 async def reply_to_query(message: discord.Message, query: str):
-    # update display name of author
-    name_db.data_dict[str(message.author.id)] = message.author.display_name
-    name_db.save()
-
-    # deletes car suffix, copypaste of some code above
+    # deletes car suffix
     query = re.sub(r"(.+) +?car", "\\1", query, 1)
     
     result = None
-    for gate in range(90, 50, -10):
+    for gate in [90, 80, 70]:
         result = find_car(query, gate)
-
         if result:
             break
 
     # reply accordingly and save data if car was found
     if result:
+        hash = result["hash"]
         name = result["name"]
         url = result["url"]
         accuracy = result["accuracy"]
 
         times_format = "time"
-        if name not in frequency_db.data_dict.keys():
+        if hash not in freqs_db.data_dict.keys():
             times_format = "EVER SEEN"
-            frequency_db.data_dict[name] = 1
+            freqs_db.data_dict[hash] = 1
             times_seen = 1
         else:
-            frequency_db.data_dict[name] += 1
-            times_seen = frequency_db.data_dict[name]
+            freqs_db.data_dict[hash] += 1
+            times_seen = freqs_db.data_dict[hash]
 
         description = "already seen"
         title = ""
-        if str(message.author.id) not in user_db.data_dict.keys():
-            user_db.data_dict[str(message.author.id)] = []
-
-        if name not in user_db.data_dict[str(message.author.id)]:
+        if hash not in users_db.data_dict[message.author.id]["seen"]:
             description = "**+1**"
             title = "NEW "
-            user_db.data_dict[str(message.author.id)].append(name)
+            users_db.data_dict[message.author.id]["seen"].append(name)
 
         random_tlds = [".com", ".xxx", ".xyz", ".love", ".io", ".roblox", ".volvo", ".kia", ".mercedes", ".bmw", ".cars", ".dripcar"]
         random_links = ["download-more-cars", "i-love-my-car", "hot-cars-watch-for-free", "dripcar-my-beloved", "i-have-car-videos", "car-share", "my-drip-car", "free-cars-watch-online"]
@@ -141,10 +120,6 @@ async def reply_to_query(message: discord.Message, query: str):
 
         await message.reply(f"{lol}: {url}")
         await message.channel.send(embed = create_embed(f"{title}[{name}] ({to_ordinal(times_seen)} {times_format})", f"🚗 {accuracy}% accuracy, {description} 🚙"))
-
-        # save data
-        frequency_db.save()
-        user_db.save()
 
         return
     
@@ -175,16 +150,24 @@ async def on_message(message: discord.Message):
     if not match:
         return
     
+    # update user nickname and id
+    if message.author.id not in users_db.data_dict:
+        users_db.data_dict[message.author.id]["seen"] = []
+
+    users_db.data_dict[message.author.id]["name"] = message.author.display_name
+    
     # get data from query
     query = match.group(1)
 
-    # send leaderboards if query is empty
+    # send leaderboards if query is empty or reply to it
     if query == "":
         await post_leaderboards(message)
-        return
-    
-    # ...or else reply to query
-    await reply_to_query(message, query)
+    else:
+        await reply_to_query(message, query)
+
+    # save databases if needed
+    users_db.save()
+    freqs_db.save()
 
 @automodrippy.event
 async def on_ready():
