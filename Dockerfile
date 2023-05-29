@@ -4,8 +4,9 @@ WORKDIR /automodrippy
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY not_found.mp3 ./
+COPY sillydbmanager.py ./
 COPY automodrippy.py ./
 
-COPY cars.txt ./
+COPY cars.csv ./
+
 CMD [ "python", "automodrippy.py" ]
