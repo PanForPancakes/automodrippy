@@ -33,9 +33,9 @@ fi
 
 $builder build --tag automodrippy .
 
-# kill and remove old container if exist
+# stop and remove old container if exist
 
-$builder kill --ignore --signal INT automodrippy
+$builder stop --time 1 --ignore automodrippy
 $builder rm --ignore automodrippy
 
 # make sure data dir exists
