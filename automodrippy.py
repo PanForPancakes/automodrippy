@@ -4,8 +4,6 @@ import os, re, discord, json, os, os.path, threading, logging, random
 # thefuzz search
 from thefuzz import process as fuzz
 
-DEFAULT = "not_found.mp3"
-
 # basic json-"db" "manager" for storing data
 class JsonDB:
     data: dict = None
@@ -228,7 +226,7 @@ async def reply_to_query(message: discord.Message, query: str):
         return
     
     # ...or reply with error message
-    await message.reply(embed = create_embed("no car found", "🚗 choot choot 🚙 (0% accuracy)"), file = discord.File(DEFAULT))
+    await message.reply(embed = create_embed("no car found", "🚗 choot choot 🚙 (0% accuracy)"))
 
 @automodrippy.event
 async def on_message(message: discord.Message):
