@@ -15,7 +15,7 @@ def find_car(query: str, gate: int = 75):
     for car_hash in cars.keys():
         hashplussearchname[car_hash] = cars[car_hash][2]
 
-    results = fuzz.extractBests("kek", hashplussearchname, limit = 3, score_cutoff = gate)
+    results = fuzz.extractBests(query, hashplussearchname, limit = 3, score_cutoff = gate)
 
     if len(results) == 0:
         return None
