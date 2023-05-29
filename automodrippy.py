@@ -4,35 +4,8 @@ import os, re, discord, json, os, os.path, threading, logging, random
 # thefuzz search
 from thefuzz import process as fuzz
 
-# basic json-"db" "manager" for storing data
-class JsonDB:
-    data: dict = None
-    __last_data: dict = None
-    __filename: str = None
-    __autosave_interval: int = None
-
-    def save(self, force = True):
-        if self.data == self.__last_data and not force:
-            return
-
-        with open(self.__filename, "w") as file:
-            self.__last_data = self.data
-            json.dump(self.__last_data, file)
-    
-    def __save(self):
-        self.save(force = False)
-        threading.Timer(interval = self.__autosave_interval, function = self.__save)
-
-    def __init__(self, filename, autosave_interval = 300):
-        self.__filename = filename
-        self.__autosave_interval = autosave_interval
-
-        with open(self.__filename) as file:
-            self.__last_data = json.load(file)
-            self.data = self.__last_data
-
-        if self.__autosave_interval != None:
-            self.__save()
+# sillydbmanager improvised databases
+from sillydbmanager import JsonDictionaryDB
 
 # very clever index search
 def vcis(what: object, where: list, gate: int = 75):
@@ -115,9 +88,9 @@ if len(duplicates) > 0:
     exit(1)
 
 # open databases
-name_db = JsonDB(".automodrippy/name_data.json")
-user_db = JsonDB(".automodrippy/user_data.json")
-frequency_db = JsonDB(".automodrippy/frequency_data.json")
+name_db = JsonDictionaryDB(".automodrippy/name_data.json")
+user_db = JsonDictionaryDB(".automodrippy/user_data.json")
+frequency_db = JsonDictionaryDB(".automodrippy/frequency_data.json")
 
 # create instance of discord.Client
 intents = discord.Intents().default()
@@ -126,15 +99,15 @@ automodrippy = discord.Client(intents = intents)
 
 async def post_leaderboards(message: discord.Message):
     total_posted = 0
-    for car in frequency_db.data.keys():
-        total_posted += frequency_db.data[car]
+    for car in frequency_db.data_dict.keys():
+        total_posted += frequency_db.data_dict[car]
 
     people = []
-    for name in user_db.data.keys():
-        if name not in name_db.data.keys():
-            people.append((f"<@{name}>", len(user_db.data[name])))
+    for name in user_db.data_dict.keys():
+        if name not in name_db.data_dict.keys():
+            people.append((f"<@{name}>", len(user_db.data_dict[name])))
         else:
-            people.append((name_db.data[name], len(user_db.data[name])))
+            people.append((name_db.data_dict[name], len(user_db.data_dict[name])))
 
     people.sort(key = lambda element: element[1])
     
@@ -155,7 +128,7 @@ async def post_leaderboards(message: discord.Message):
 
 async def reply_to_query(message: discord.Message, query: str):
     # update display name of author
-    name_db.data[str(message.author.id)] = message.author.display_name
+    name_db.data_dict[str(message.author.id)] = message.author.display_name
     name_db.save(force = False)
 
     # deletes car suffix, copypaste of some code above
@@ -169,23 +142,23 @@ async def reply_to_query(message: discord.Message, query: str):
         accuracy = result["accuracy"]
 
         times_format = "time"
-        if name not in frequency_db.data.keys():
+        if name not in frequency_db.data_dict.keys():
             times_format = "EVER SEEN"
-            frequency_db.data[name] = 1
+            frequency_db.data_dict[name] = 1
             times_seen = 1
         else:
-            frequency_db.data[name] += 1
-            times_seen = frequency_db.data[name]
+            frequency_db.data_dict[name] += 1
+            times_seen = frequency_db.data_dict[name]
 
         description = "already seen"
         title = ""
-        if str(message.author.id) not in user_db.data.keys():
-            user_db.data[str(message.author.id)] = []
+        if str(message.author.id) not in user_db.data_dict.keys():
+            user_db.data_dict[str(message.author.id)] = []
 
-        if name not in user_db.data[str(message.author.id)]:
+        if name not in user_db.data_dict[str(message.author.id)]:
             description = "**+1**"
             title = "NEW "
-            user_db.data[str(message.author.id)].append(name)
+            user_db.data_dict[str(message.author.id)].append(name)
 
         random_tlds = [
             ".com",
