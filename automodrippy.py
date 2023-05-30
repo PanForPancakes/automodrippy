@@ -50,8 +50,9 @@ cars = {}
 load_cars()
 
 # open databases
-users_db = JsonDictionaryDB(".automodrippy/users.json")
-freqs_db = JsonDictionaryDB(".automodrippy/freqs.json")
+os.chdir("automodrippy_data")
+users_db = JsonDictionaryDB("users.json")
+freqs_db = JsonDictionaryDB("freqs.json")
 
 # create instance of discord.Client
 intents = discord.Intents().default()

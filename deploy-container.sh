@@ -1,17 +1,29 @@
+# make sure data folder exists
+
+mkdir -p automodrippy_data
+
+# copy cars.csv from repository if it doesn't exist in data folder
+
+if [ ! -f automodrippy_data/cars.csv ]; then
+    echo "cars.csv file doesn't exist -->"
+    echo "--> copying one from repository"
+    cp cars.csv automodrippy_data/
+fi
+
 # get token
 
-if [ ! -f TOKEN ]; then
+if [ ! -f automodrippy_data/TOKEN ]; then
     echo "TOKEN file doesn't exist."
     echo "Abort."
     exit 1
 fi
 
-automodrippy_token=`cat TOKEN`
+automodrippy_token=`cat automodrippy_data/TOKEN`
 
 if [[ -z "$automodrippy_token" ]]; then
     echo "No bot token in TOKEN file"
     echo "You can do something like this:"
-    echo "echo \"<your_token_here>\" > TOKEN"
+    echo "echo \"<your_token_here>\" > automodrippy_data/TOKEN"
     echo "...and then rerun this script again."
     echo "Abort."
     exit 1
@@ -38,15 +50,11 @@ $builder build --tag automodrippy .
 $builder stop --time 1 --ignore automodrippy
 $builder rm --ignore automodrippy
 
-# make sure data dir exists
-
-mkdir -p data
-
 # start new container
 
 $builder run -itd \
     -e AUTOMODRIPPY_TOKEN="$automodrippy_token" \
     --restart=always \
     --name automodrippy \
-    --mount type=bind,source=./data,target=/automodrippy/.automodrippy \
+    --mount type=bind,source=./automodrippy_data,target=/automodrippy/automodrippy_data \
     localhost/automodrippy:latest
