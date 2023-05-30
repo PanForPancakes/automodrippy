@@ -11,7 +11,7 @@ automodrippy_token=`cat TOKEN`
 if [[ -z "$automodrippy_token" ]]; then
     echo "No bot token in TOKEN file"
     echo "You can do something like this:"
-    echo "echo \"<your_token_here> >\" > TOKEN"
+    echo "echo \"<your_token_here>\" > TOKEN"
     echo "...and then rerun this script again."
     echo "Abort."
     exit 1
