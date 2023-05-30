@@ -179,7 +179,7 @@ top_level_domains = [
 ]
 
 def get_random_website(names: list[str], tlds: list[str] = top_level_domains):
-    name = random.choice(name)
-    tld = random.choice(top_level_domains)
+    name = random.choice(names)
+    tld = random.choice(tlds)
 
     return f"{name}.{tld}"
