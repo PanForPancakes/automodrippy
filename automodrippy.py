@@ -108,7 +108,7 @@ async def reply_to_query(message: discord.Message, query: str):
         if hash not in users_db.data_dict[message.author.id]["seen"]:
             description = "**+1**"
             title = "NEW "
-            users_db.data_dict[message.author.id]["seen"].append(name)
+            users_db.data_dict[message.author.id]["seen"].append(hash)
 
         random_tlds = [".com", ".xxx", ".xyz", ".love", ".io", ".roblox", ".volvo", ".kia", ".mercedes", ".bmw", ".cars", ".dripcar"]
         random_links = ["download-more-cars", "i-love-my-car", "hot-cars-watch-for-free", "dripcar-my-beloved", "i-have-car-videos", "car-share", "my-drip-car", "free-cars-watch-online"]
