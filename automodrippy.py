@@ -7,6 +7,9 @@ from thefuzz import process as fuzz
 # sillydbmanager improvised databases
 from sillydbmanager import JsonDictionaryDB, CsvListDB
 
+# myrandomwebsite random website generator
+from myrandomwebsite import get_random_website
+
 # car finder helper function
 def find_car(query: str, gate: int = 75):
     hashplussearchname = dict()
@@ -117,9 +120,7 @@ async def reply_to_query(message: discord.Message, query: str):
         # GENERATED URLS BOTH MIGHT AND MIGHT NOT EXIST
         # CONTENT ON THESE PAGES IS NOT CONTROLLED SO FOR YOUR SAFETY DO NOT VISIT GENERATED URLS
 
-        lol = random_links[random.randint(0, len(random_links) - 1)] + random_tlds[random.randint(0, len(random_tlds) - 1)]
-
-        await message.reply(f"{lol}: {url}")
+        await message.reply(f"{get_random_website(random_links, random_tlds)}: {url}")
         await message.channel.send(embed = create_embed(f"{title}[{name}] ({to_ordinal(times_seen)} {times_format})", f"🚗 {accuracy}% accuracy, {description} 🚙"))
 
         return
