@@ -1,6 +1,8 @@
 import os, copy, json, csv
 
 license = """
+The MIT License (MIT)
+
 Copyright © 2023 PanForPancakes
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
