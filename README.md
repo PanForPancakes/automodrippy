@@ -50,3 +50,15 @@ python automodrippy.py
 ```
 
 This snippet assumes that you have git installed and in your PATH, but you can always just extract latest source code and `cd` into its directory.
+
+---
+
+<p align="center">
+    <a href="https://forthebadge.com"><img src="https://forthebadge.com/images/badges/open-source.svg" alt="For The Badge"/></a>
+    <a href="https://forthebadge.com"><img src="https://forthebadge.com/images/badges/made-with-python.svg" alt="For The Badge"/></a>
+    <a href="https://forthebadge.com"><img src="https://forthebadge.com/images/badges/built-by-codebabes.svg" alt="For The Badge"/></a>
+    <a href="https://forthebadge.com"><img src="https://forthebadge.com/images/badges/powered-by-jeffs-keyboard.svg" alt="For The Badge"/></a>
+    <a href="https://forthebadge.com"><img src="https://forthebadge.com/images/badges/kinda-sfw.svg" alt="For The Badge"/></a>
+    <a href="https://forthebadge.com"><img src="https://forthebadge.com/images/badges/reading-6th-grade-level.svg" alt="For The Badge"/></a>
+    <a href="https://forthebadge.com"><img src="https://forthebadge.com/images/badges/uses-badges.svg" alt="For The Badge"/></a>
+</p>
