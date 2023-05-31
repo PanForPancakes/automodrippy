@@ -13,7 +13,10 @@ fi
 # get token
 
 if [ ! -f automodrippy_data/TOKEN ]; then
-    echo "TOKEN file doesn't exist."
+    echo "No bot token in TOKEN file"
+    echo "You can do something like this:"
+    echo "echo \"<your_token_here>\" > automodrippy_data/TOKEN"
+    echo "...and then rerun this script again."
     echo "Abort."
     exit 1
 fi
