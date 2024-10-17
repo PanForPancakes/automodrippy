@@ -1,6 +1,6 @@
 # automodrippy
 
-currently WIP  
+currently WIP (lmaoo)  
 *expect the unexpected*
 
 ## Usage
